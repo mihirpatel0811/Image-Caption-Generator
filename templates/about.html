@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="page-header">
+    <h1 class="page-title">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        About AutoCaption AI
+    </h1>
+    <p class="page-desc">Understand how our AI-powered caption engine works</p>
+</section>
+
+<div class="about-container">
+    <div class="about-grid">
+        <div class="about-card">
+            <div class="about-card-icon" style="--accent: #6366f1">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3>AI-Powered Analysis</h3>
+            <p>Powered by Google Gemini 2.5 Flash, our vision engine deeply analyzes every element of your image — objects, people, colors, composition, mood, and context — to generate accurate, contextually rich captions.</p>
+        </div>
+
+        <div class="about-card">
+            <div class="about-card-icon" style="--accent: #ec4899">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            </div>
+            <h3>Platform-Specific Captions</h3>
+            <p>Each social media platform has its own culture, tone, and character limits. Our engine tailors captions specifically for LinkedIn, Instagram, Twitter/X, TikTok, YouTube, Facebook, Pinterest, and more.</p>
+        </div>
+
+        <div class="about-card">
+            <div class="about-card-icon" style="--accent: #10b981">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3>Accessibility First</h3>
+            <p>Every image gets optimized alt-text for screen readers, ensuring your content is accessible to all audiences. WCAG-compliant descriptions that convey essential visual information.</p>
+        </div>
+
+        <div class="about-card">
+            <div class="about-card-icon" style="--accent: #f59e0b">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <h3>Privacy Focused</h3>
+            <p>Your data stays yours. Use the Logout button to completely wipe all stored images, captions, and session data. Every visit starts fresh with zero residual data.</p>
+        </div>
+    </div>
+
+    <div class="about-section">
+        <h2 class="about-section-title">Supported Platforms</h2>
+        <div class="platform-table">
+            <div class="platform-row">
+                <span class="platform-name">Instagram</span>
+                <span class="platform-detail">Emoji-rich, 15-20 hashtags, CTAs, up to 2,200 chars</span>
+            </div>
+            <div class="platform-row">
+                <span class="platform-name">LinkedIn</span>
+                <span class="platform-detail">Professional tone, storytelling, 3-5 hashtags, 150-300 words</span>
+            </div>
+            <div class="platform-row">
+                <span class="platform-name">Twitter / X</span>
+                <span class="platform-detail">Punchy, witty, under 280 chars, 1-3 hashtags</span>
+            </div>
+            <div class="platform-row">
+                <span class="platform-name">Facebook</span>
+                <span class="platform-detail">Warm, conversational, question-driven, 100-250 chars</span>
+            </div>
+            <div class="platform-row">
+                <span class="platform-name">TikTok</span>
+                <span class="platform-detail">Trendy, Gen-Z energy, hooks, 3-5 hashtags, under 150 chars</span>
+            </div>
+            <div class="platform-row">
+                <span class="platform-name">YouTube</span>
+                <span class="platform-detail">SEO-friendly descriptions, CTAs, 5-10 hashtags, 200-500 chars</span>
+            </div>
+            <div class="platform-row">
+                <span class="platform-name">Pinterest</span>
+                <span class="platform-detail">Keyword-rich, searchable, inspirational, 100-200 chars</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="about-section">
+        <h2 class="about-section-title">How It Works</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Upload Image</h4>
+                <p>Drag and drop or click to select any image (PNG, JPG, WebP, GIF).</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Choose Platform</h4>
+                <p>Select your target social media platform for optimized captions.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>AI Generates</h4>
+                <p>Gemini 2.5 Flash analyzes your image and creates 3 caption types.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Copy & Post</h4>
+                <p>One-click copy the caption you need and post it on your platform.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

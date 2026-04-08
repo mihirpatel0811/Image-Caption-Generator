@@ -1,10 +1,137 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="page-header">
+    <h1 class="page-title">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Caption Gallery
+    </h1>
+    <p class="page-desc">Browse all your previously generated captions and images</p>
+    <div class="page-header-actions">
+        {% if images %}
+        <button class="btn btn-ghost" id="clearHistoryBtn" title="Clear all history">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            Clear All
+        </button>
+        {% endif %}
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Caption
+        </a>
+    </div>
+</section>
+
+{% if images %}
+<div class="gallery-grid" id="galleryGrid">
+    {% for image in images %}
+    <div class="gallery-card" 
+         data-filename="{{ image.filename }}" 
+         data-descriptive="{{ image.descriptive_caption|e }}"
+         data-social="{{ image.social_caption|e }}"
+         data-alt="{{ image.alt_text|e }}"
+         data-platform="{{ image.platform }}"
+         data-timestamp="{{ image.timestamp.strftime('%b %d, %Y at %I:%M %p') }}">
+        <div class="gallery-img-wrap">
+            <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" 
+                 alt="{{ image.alt_text }}" 
+                 loading="lazy">
+            <div class="gallery-overlay">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                <span>View Caption</span>
+            </div>
+        </div>
+        <div class="gallery-info">
+            <div class="gallery-meta">
+                <span class="gallery-platform-tag">{{ image.platform }}</span>
+                <span class="gallery-date">{{ image.timestamp.strftime('%b %d, %Y') }}</span>
+            </div>
+            <p class="gallery-caption-preview">{{ image.social_caption[:100] }}{% if image.social_caption|length > 100 %}...{% endif %}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    </div>
+    <h3>No captions yet</h3>
+    <p>Upload your first image to start generating platform-perfect captions.</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Get Started
+    </a>
+</div>
+{% endif %}
+
+<!-- Gallery Modal -->
+<div class="modal-overlay" id="galleryModal">
+    <div class="gallery-modal-card">
+        <button class="modal-close" id="galleryModalClose">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="gallery-modal-content">
+            <div class="gallery-modal-image">
+                <img id="modalImage" src="" alt="">
+            </div>
+            <div class="gallery-modal-details">
+                <div class="modal-meta">
+                    <span class="modal-platform" id="modalPlatform"></span>
+                    <span class="modal-date" id="modalDate"></span>
+                </div>
+                
+                <div class="modal-caption-section">
+                    <h4>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                        Social Caption
+                    </h4>
+                    <p id="modalSocial" class="modal-caption-text"></p>
+                    <button class="copy-btn-sm" data-copy-target="modalSocial">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        Copy
+                    </button>
+                </div>
+
+                <div class="modal-caption-section">
+                    <h4>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Descriptive
+                    </h4>
+                    <p id="modalDescriptive" class="modal-caption-text"></p>
+                    <button class="copy-btn-sm" data-copy-target="modalDescriptive">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        Copy
+                    </button>
+                </div>
+
+                <div class="modal-caption-section">
+                    <h4>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Alt-Text
+                    </h4>
+                    <p id="modalAlt" class="modal-caption-text"></p>
+                    <button class="copy-btn-sm" data-copy-target="modalAlt">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Clear History Modal -->
+<div class="modal-overlay" id="clearHistoryModal">
+    <div class="modal-card">
+        <div class="modal-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        </div>
+        <h3 class="modal-title">Clear All History</h3>
+        <p class="modal-desc">This will permanently delete all your saved images and captions. This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" id="cancelClearHistory">Cancel</button>
+            <button class="btn btn-danger" id="confirmClearHistory">Clear All</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,10 +1,216 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            AI-Powered Caption Engine
+        </div>
+        <h1 class="hero-title">
+            Generate <span class="gradient-text">Platform-Perfect</span><br>
+            Captions Instantly
+        </h1>
+        <p class="hero-subtitle">Upload any image and get AI-generated captions tailored for every major social media platform — with the right tone, hashtags, and character limits.</p>
+    </div>
+</section>
+
+<div class="generator-container">
+    <!-- Platform Selector -->
+    <div class="platform-section">
+        <h2 class="section-label">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            Select Platform
+        </h2>
+        <div class="platform-grid" id="platformGrid">
+            {% for p in platforms %}
+            <button class="platform-chip {% if p.id == 'general' %}active{% endif %}" data-platform="{{ p.id }}" title="{{ p.style }}">
+                {% if p.id == 'general' %}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                {% elif p.id == 'instagram' %}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                {% elif p.id == 'LinkedIn' %}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                {% elif p.id == 'facebook' %}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                {% elif p.id == 'twitter' %}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/></svg>
+                {% elif p.id == 'YouTube' %}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.43z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                {% elif p.id == 'pinterest' %}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 12a4 4 0 108 0c0-2.22-1.79-4-4-4a4 4 0 00-4 4z"/><path d="M9 21c0-3.87 3.13-7 7-7"/><path d="M12 2a10 10 0 00-3.92 19.27"/><circle cx="12" cy="12" r="10"/></svg>
+                {% endif %}
+                <span>{{ p.name }}</span>
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Upload Zone -->
+    <div class="upload-section">
+        <div class="upload-card">
+            <div id="drop-zone" class="drop-zone">
+                <form id="upload-form" enctype="multipart/form-data">
+                    <input type="file" id="file-input" name="image" class="hidden" accept="image/*">
+                    <input type="hidden" id="platform-input" name="platform" value="general">
+                    <div class="drop-zone-content">
+                        <div class="upload-icon-wrap">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                        </div>
+                        <p class="drop-title">Drop your image here</p>
+                        <p class="drop-subtitle">or click to browse &bull; PNG, JPG, WebP, GIF &bull; Max 16MB</p>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Selected File Display -->
+            <div class="selected-file-display hidden" id="selectedFileDisplay">
+                <div class="selected-file-info">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <span id="selectedFileName">No file selected</span>
+                </div>
+                <button class="clear-file-btn" id="clearFileBtn" title="Clear file">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            
+            <!-- Suggestion Text Box -->
+            <div class="suggestion-box">
+                <div class="suggestion-header">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span>Caption Hint (optional)</span>
+                </div>
+                <label for="captionHint"></label>
+                <textarea
+                    id="captionHint" 
+                    class="suggestion-textarea" 
+                    placeholder="Add hints like 'sunset at beach', 'birthday celebration', 'product photo for shop'..."
+                    rows="2"
+                ></textarea>
+            </div>
+
+            <!-- Caption Type Selector -->
+            <div class="caption-type-section">
+                <div class="caption-type-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <span>Generate</span>
+                </div>
+                <div class="caption-type-options" id="captionTypeOptions">
+                    <button class="caption-type-btn active" data-type="all" title="Generate all 3 captions">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        All Three
+                    </button>
+                    <button class="caption-type-btn" data-type="descriptive" title="Generate only descriptive caption">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Descriptive
+                    </button>
+                    <button class="caption-type-btn" data-type="social" title="Generate only social caption">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg>
+                        Social
+                    </button>
+                    <button class="caption-type-btn" data-type="accessibility" title="Generate only alt-text">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Alt-Text
+                    </button>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <div class="generate-action">
+                <button class="generate-btn" id="generateBtn" disabled>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span>Generate Captions</span>
+                </button>
+            </div>
+            
+            <div id="error-message" class="error-toast hidden">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                <span id="error-text"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Area -->
+    <div id="results-area" class="results-area hidden">
+        <!-- Loading -->
+        <div id="loading-state" class="loading-state hidden">
+            <div class="loader-ring">
+                <div></div><div></div><div></div><div></div>
+            </div>
+            <p class="loading-text">Analyzing image with AI</p>
+            <p class="loading-subtext">Generating platform-optimized captions...</p>
+        </div>
+
+        <!-- Caption Results: Image + Selected Caption (horizontal) + Caption Options -->
+        <div id="captions-container" class="captions-container hidden">
+            <div class="caption-result-layout">
+                <!-- Image Preview -->
+                <div class="preview-panel">
+                    <div class="panel-header">
+                        <h3>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            Uploaded Image
+                        </h3>
+                        <span class="platform-badge" id="resultPlatformBadge">General</span>
+                    </div>
+                    <div class="preview-container">
+                        <img id="image-preview" src="" alt="Preview">
+                    </div>
+                </div>
+
+                <!-- Selected Caption Display (horizontal, directly below image) -->
+                <div class="selected-caption-area" id="selectedCaptionArea">
+                    <div class="selected-caption-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                        Selected Caption
+                    </div>
+                    <p class="selected-caption-text" id="selectedCaptionText">Click a caption option below to select it</p>
+                </div>
+
+                <!-- Three Caption Option Buttons -->
+                <div class="caption-options-row">
+                    <button class="caption-option-btn" data-caption-key="descriptive" id="captionOptDesc">
+                        <span class="option-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            Descriptive
+                        </span>
+                        <span class="option-preview" id="optDescPreview">--</span>
+                    </button>
+
+                    <button class="caption-option-btn featured-option" data-caption-key="social" id="captionOptSocial">
+                        <span class="option-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                            Social Caption
+                        </span>
+                        <span class="option-preview" id="optSocialPreview">--</span>
+                    </button>
+
+                    <button class="caption-option-btn" data-caption-key="accessibility" id="captionOptAlt">
+                        <span class="option-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            Alt-Text
+                        </span>
+                        <span class="option-preview" id="optAltPreview">--</span>
+                    </button>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="caption-actions">
+                    <button class="regenerate-btn" id="regenerateBtn" title="Regenerate captions">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                        <span>Regenerate</span>
+                    </button>
+                    <button class="copy-selected-btn" id="copySelectedBtn" title="Copy selected caption">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        <span>Copy Caption</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,9 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCaption AI — Smart Caption Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="{{ url_for('index') }}" class="navbar-brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span class="brand-text">AutoCaption<span class="brand-accent">AI</span></span>
+            </a>
 
+            <div class="navbar-links" id="navLinks">
+                <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                    <span>Home</span>
+                </a>
+                <a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">
+                    <span>About</span>
+                </a>
+                <a href="{{ url_for('gallery') }}" class="nav-link {% if request.endpoint == 'gallery' %}active{% endif %}">
+                    <span>Gallery</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-link logout-link" onclick="handleLogout(event)">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="brand-text">AutoCaption<span class="brand-accent">AI</span></span>
+                <span class="footer-sep">|</span>
+                <span class="footer-powered">Powered by Google Gemini 2.5 Flash</span>
+            </div>
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+    <script>
+        async function handleLogout(event) {
+            event.preventDefault();
+            if (confirm('Are you sure you want to exit the application?')) {
+                try {
+                    await fetch('/reset', { method: 'POST' });
+                    await fetch('/logout', { method: 'POST' });
+                } catch (e) {
+                    console.error("Error during application shutdown:", e);
+                }
+                
+                // Attempt to close the window
+                window.close();
+                
+                // Fallback message if browser prevents window.close()
+                document.body.innerHTML = `
+                    <div style="display:flex; height:100vh; width:100vw; justify-content:center; align-items:center; flex-direction:column; background-color:#111827; color:#f9fafb; font-family:system-ui, sans-serif;">
+                        <h2 style="font-size:2rem; margin-bottom:1rem; font-weight:600;">Application Closed</h2>
+                        <p style="font-size:1.1rem; color:#9ca3af;">The server has been stopped. You can now safely close this tab.</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
