@@ -46,7 +46,10 @@ A Flask-based web application that uses Google's Gemini 2.5 Flash AI model to ge
 
 ## Required Libraries
 
-Install these dependencies via `pip install -r requirements.txt`:
+Install these dependencies via 
+```
+pip install -r requirements.txt
+```
 
 | Package | Description |
 |---------|-------------|
