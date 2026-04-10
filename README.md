@@ -16,7 +16,7 @@ A Flask-based web application that uses Google's Gemini 2.5 Flash AI model to ge
 ## Prerequisites
 
 - Python 3.10+
-- Google Gemini API Key
+- Google Gemini API Key (get it from https://aistudio.google.com/app/apikey)
 
 
 ## Installation
@@ -33,7 +33,7 @@ A Flask-based web application that uses Google's Gemini 2.5 Flash AI model to ge
    ```bash
    pip install -r requirements.txt
    ```
-5. Create a `.env` file and add your API key:
+5. Create a `.env` file in the project root and add your API key:
    ```
    GEMINI_API_KEY=your_api_key_here
    ```
@@ -42,6 +42,21 @@ A Flask-based web application that uses Google's Gemini 2.5 Flash AI model to ge
    python app.py
    ```
 7. Open your browser and navigate to `http://localhost:5000`
+
+
+## Required Libraries
+
+Install these dependencies via `pip install -r requirements.txt`:
+
+| Package | Description |
+|---------|-------------|
+| flask | Web framework |
+| flask-sqlalchemy | Database ORM |
+| google-genai | Gemini AI integration |
+| werkzeug | WSGI utilities |
+| python-dotenv | Environment variable loader |
+| pillow | Image processing |
+| protobuf | Protocol buffers |
 
 
 ## Project Structure
